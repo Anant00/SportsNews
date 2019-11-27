@@ -52,7 +52,6 @@ class MainActivity : DaggerAppCompatActivity(), NewsAdapter.OnAdapterItemClick {
             fetchData(it, false)
         })
         viewModel.loadMoreResult.observe(this, Observer {
-            binding.resource = it
             fetchData(it, true)
         })
     }

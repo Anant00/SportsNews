@@ -1,5 +1,6 @@
-package com.app.sportsnews.ui
+package com.app.sportsnews.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -20,12 +21,12 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import rx.android.schedulers.AndroidSchedulers
 
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity(), NewsAdapter.OnAdapterItemClick {
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
-    private val imagesAdapter by lazy { NewsAdapter() }
+    private val newsAdapter by lazy { NewsAdapter(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -82,7 +83,12 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun setRecyclerViewAndData(data: List<Hit>?) {
-        imagesAdapter.submitList(data)
-        binding.recyclerView.adapter = imagesAdapter
+        newsAdapter.submitList(data)
+        binding.recyclerView.adapter = newsAdapter
+    }
+
+    override fun onItemClick(position: Int) {
+        val url = newsAdapter.currentList[position].url
+        startActivity(Intent(this, DetailsActivity::class.java).putExtra("url", url))
     }
 }

@@ -10,7 +10,6 @@ import com.app.sportsnews.R
 import com.app.sportsnews.databinding.DetailsActivityBinding
 import com.app.sportsnews.utils.Resource
 import com.app.sportsnews.utils.showLog
-import kotlinx.android.synthetic.main.details_activity.*
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -35,5 +34,11 @@ class DetailsActivity : AppCompatActivity() {
                 binding.resource = Resource.success(null)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.webView.removeAllViews()
+        binding.webView.destroy()
     }
 }

@@ -76,4 +76,8 @@ dependencies {
 
     //leak canary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+
+    //Rx binding
+    implementation "com.jakewharton.rxbinding:rxbinding-support-v4:$rxbinding_version"
+    implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$rxbinding_version"
 }

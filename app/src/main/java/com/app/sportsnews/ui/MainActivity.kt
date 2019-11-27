@@ -43,7 +43,6 @@ class MainActivity : DaggerAppCompatActivity() {
             binding.resource = it
             when (it.status) {
                 Status.SUCCESS -> {
-                    showLog("success, ${it.data?.size}")
                     setRecyclerViewAndData(it.data)
                 }
                 Status.ERROR -> {
@@ -72,10 +71,12 @@ class MainActivity : DaggerAppCompatActivity() {
                 !it.isNullOrEmpty()
             }
             .debounce(1, TimeUnit.SECONDS)
-            .subscribe {
+            .subscribe({
                 viewModel.setQuery(it)
-                imagesAdapter.submitList(emptyList())
-            }
+            },
+                {
+                    showLog("Error searchView: ${it.localizedMessage}")
+                })
     }
 
     private fun setRecyclerViewAndData(data: List<Hit>?) {

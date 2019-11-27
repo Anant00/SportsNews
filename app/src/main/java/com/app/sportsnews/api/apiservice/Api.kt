@@ -11,5 +11,5 @@ interface Api {
     fun getSearchResult(
         @Query("query") query: String,
         @Query("page") page: String
-    ): Flowable<List<SearchHits>>
+    ): Flowable<SearchHits>
 }

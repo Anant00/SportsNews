@@ -20,7 +20,6 @@
         android:backgroundTint="@color/colorGrey"
         tools:context=".ui.MainActivity">
 
-
         <ProgressBar
             android:id="@+id/load_more_bar"
             android:layout_height="wrap_content"

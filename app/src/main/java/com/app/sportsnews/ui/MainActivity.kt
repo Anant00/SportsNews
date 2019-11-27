@@ -12,6 +12,7 @@ import com.app.sportsnews.ui.adapters.NewsAdapter
 import com.app.sportsnews.utils.Resource
 import com.app.sportsnews.utils.Status
 import com.app.sportsnews.utils.showLog
+import com.app.sportsnews.utils.showToast
 import com.app.sportsnews.viewmodels.MainViewModel
 import com.jakewharton.rxbinding.widget.RxTextView
 import dagger.android.support.DaggerAppCompatActivity
@@ -47,6 +48,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
                 Status.ERROR -> {
                     showLog("error ${it.message}")
+                    showToast("Error while Fetching ${it.message}")
                 }
                 Status.LOADING -> {
                     showLog("Loading")

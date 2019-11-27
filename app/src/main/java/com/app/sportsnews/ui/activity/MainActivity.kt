@@ -22,10 +22,9 @@ import com.app.sportsnews.utils.showToast
 import com.app.sportsnews.viewmodels.MainViewModel
 import com.jakewharton.rxbinding.widget.RxTextView
 import dagger.android.support.DaggerAppCompatActivity
-import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
+import rx.android.schedulers.AndroidSchedulers
 
 class MainActivity : DaggerAppCompatActivity(), NewsAdapter.OnAdapterItemClick {
     @Inject

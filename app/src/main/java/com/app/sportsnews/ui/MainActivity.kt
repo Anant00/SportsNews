@@ -8,8 +8,12 @@ import com.app.sportsnews.di.AppViewModelFactory
 import com.app.sportsnews.utils.Status
 import com.app.sportsnews.utils.showLog
 import com.app.sportsnews.viewmodels.MainViewModel
+import com.jakewharton.rxbinding.widget.RxTextView
 import dagger.android.support.DaggerAppCompatActivity
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_main.*
+import rx.android.schedulers.AndroidSchedulers
 
 class MainActivity : DaggerAppCompatActivity() {
     @Inject
@@ -21,6 +25,7 @@ class MainActivity : DaggerAppCompatActivity() {
         setViewModel()
         setSearchQuery()
         setData()
+        searchView()
     }
 
     private fun setViewModel() {
@@ -46,5 +51,20 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun setSearchQuery() {
         viewModel.setQuery("baseball")
+    }
+
+    private fun searchView() {
+        RxTextView.textChanges(mTvSearch)
+            .observeOn(AndroidSchedulers.mainThread())
+            .map {
+                it.toString()
+            }
+            .filter {
+                it != "" && it.length < 3
+            }
+            .debounce(3, TimeUnit.SECONDS)
+            .subscribe {
+                viewModel.setQuery(it)
+            }
     }
 }

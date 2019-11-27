@@ -25,6 +25,6 @@ class MainViewModel
         if (input == _query.value) {
             return
         }
-        _query.value = input
+        _query.postValue(input)
     }
 }

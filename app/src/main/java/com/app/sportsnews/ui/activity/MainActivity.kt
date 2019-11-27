@@ -83,11 +83,11 @@ class MainActivity : DaggerAppCompatActivity(), NewsAdapter.OnAdapterItemClick {
             .debounce(500, TimeUnit.MILLISECONDS)
             .skip(1)
             .observeOn(AndroidSchedulers.mainThread())
-            .distinctUntilChanged()
             .map {
                 Resource.loading(null)
                 it.toString()
             }
+            .distinctUntilChanged()
             .filter {
                 !it.isNullOrEmpty()
             }

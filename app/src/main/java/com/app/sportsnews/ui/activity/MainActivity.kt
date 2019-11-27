@@ -10,6 +10,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app.sportsnews.R
 import com.app.sportsnews.api.apimodels.Hit
 import com.app.sportsnews.databinding.ActivityMainBinding
@@ -36,38 +38,49 @@ class MainActivity : DaggerAppCompatActivity(), NewsAdapter.OnAdapterItemClick {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setViewModel()
+        binding.recyclerView.adapter = newsAdapter
         if (savedInstanceState == null) {
             viewModel.setQuery("Baseball")
         }
-        fetchData()
         searchView()
+        onScrollLoadMoreData()
     }
 
     private fun setViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        viewModel.results.observe(this, Observer {
+            fetchData(it, false)
+        })
+        viewModel.loadMoreResult.observe(this, Observer {
+            binding.resource = it
+            fetchData(it, true)
+        })
     }
 
-    private fun fetchData() {
-        viewModel.results.observe(this, Observer {
-            binding.resource = it
-            when (it.status) {
+    private fun fetchData(resource: Resource<List<Hit>>, isLoadMore: Boolean) {
+        binding.resource = resource
+        when (resource.status) {
                 Status.SUCCESS -> {
-                    setRecyclerViewAndData(it.data)
+                    if (isLoadMore) {
+                        val list = newsAdapter.currentList.toMutableList()
+                        list.addAll(resource.data as Iterable<Hit>)
+                        setRecyclerViewAndData(list)
+                    } else {
+                        setRecyclerViewAndData(resource.data)
+                    }
                 }
                 Status.ERROR -> {
-                    showLog("error ${it.message}")
-                    showToast("Error while Fetching ${it.message}")
+                    showLog("error ${resource.message}")
+                    showToast("Error while Fetching ${resource.message}")
                 }
                 Status.LOADING -> {
                     showLog("Loading")
                 }
             }
-        })
     }
 
     private fun doSearch(v: View) {
         val query = binding.mTvSearch.text.toString()
-        // Dismiss keyboard
         dismissKeyboard(v.windowToken)
         viewModel.setQuery(query)
     }
@@ -109,11 +122,24 @@ class MainActivity : DaggerAppCompatActivity(), NewsAdapter.OnAdapterItemClick {
 
     private fun setRecyclerViewAndData(data: List<Hit>?) {
         newsAdapter.submitList(data)
-        binding.recyclerView.adapter = newsAdapter
+    }
+
+    private fun onScrollLoadMoreData() {
+        var page = 0
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastPosition = layoutManager.findLastVisibleItemPosition()
+                if (lastPosition == newsAdapter.itemCount - 1) {
+                    viewModel.incrementPage(++page)
+                }
+            }
+        })
     }
 
     override fun onItemClick(position: Int) {
         val url = newsAdapter.currentList[position].url
         startActivity(Intent(this, DetailsActivity::class.java).putExtra("url", url))
+        overridePendingTransition(0, 0)
     }
 }

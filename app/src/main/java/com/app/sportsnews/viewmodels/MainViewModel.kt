@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.app.sportsnews.api.apimodels.SearchHits
+import com.app.sportsnews.api.apimodels.Hit
 import com.app.sportsnews.repository.NetworkRepository
 import com.app.sportsnews.utils.Resource
 import java.util.Locale
@@ -15,7 +15,7 @@ class MainViewModel
 
     private val _query = MutableLiveData<String>()
 
-    val results: LiveData<Resource<SearchHits>> = Transformations
+    val results: LiveData<Resource<List<Hit>>> = Transformations
         .switchMap(_query) { search ->
             repo.fetchSearchResult(search, "0")
         }

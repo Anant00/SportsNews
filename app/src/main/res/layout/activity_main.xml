@@ -15,18 +15,23 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@color/colorGrey"
+        tools:context=".ui.MainActivity">
+
 
         <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
+            android:id="@+id/load_more_bar"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:elevation="2dp"
+            android:indeterminate="true"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:visibleGone="@{resource.status == Status.LOADING}" />
 
         <LinearLayout
             android:layout_width="match_parent"

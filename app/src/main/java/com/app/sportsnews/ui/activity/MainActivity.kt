@@ -11,16 +11,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.app.sportsnews.R
 import com.app.sportsnews.api.apimodels.Hit
 import com.app.sportsnews.databinding.ActivityMainBinding
 import com.app.sportsnews.di.AppViewModelFactory
 import com.app.sportsnews.ui.adapters.NewsAdapter
-import com.app.sportsnews.utils.Resource
-import com.app.sportsnews.utils.Status
-import com.app.sportsnews.utils.showLog
-import com.app.sportsnews.utils.showToast
+import com.app.sportsnews.utils.*
 import com.app.sportsnews.viewmodels.MainViewModel
 import com.jakewharton.rxbinding.widget.RxTextView
 import dagger.android.support.DaggerAppCompatActivity
@@ -124,14 +120,10 @@ class MainActivity : DaggerAppCompatActivity(), NewsAdapter.OnAdapterItemClick {
     }
 
     private fun onScrollLoadMoreData() {
-        var page = 0
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == newsAdapter.itemCount - 1) {
-                    viewModel.incrementPage(++page)
-                }
+        val layoutManager = binding.recyclerView.layoutManager as LinearLayoutManager
+        binding.recyclerView.addOnScrollListener(object : EndlessScroll(layoutManager) {
+            override fun onLoadMore(current_page: Int) {
+                viewModel.incrementPage(current_page)
             }
         })
     }

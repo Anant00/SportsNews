@@ -31,6 +31,7 @@ class MainViewModel
             return
         }
         _query.postValue(input)
+        _page.postValue(0)
     }
 
     val loadMoreResult = Transformations

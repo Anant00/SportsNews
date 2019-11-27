@@ -1,7 +1,8 @@
-package com.app.sportsnews
+package com.app.sportsnews.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.app.sportsnews.R
 
 class MainActivity : AppCompatActivity() {
 
